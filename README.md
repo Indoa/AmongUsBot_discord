@@ -1,10 +1,13 @@
 # AmongUsBot_discord
 
+##　内容
+- このプログラムはAmongUsをdiscordで行う際に、ミュート・解除、部屋の移動を半自動で行ってくれるbot
+-- Herokuで実装しなくても、環境をPCで再現できれば誰かのPCでプログラムを実行すると使用できる 
 
 
 
-## 以下はHerokuでdiscord.pyを実行するための手順（サンプルのReadmeを引用）
-
+## 以下はHerokuでdiscord.pyを実行するための手順
+（サンプルのReadmeを引用）
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 - Herokuでdiscord.pyを始めるテンプレートです。
