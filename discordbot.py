@@ -13,10 +13,10 @@ intents = discord.Intents.default()
 intents.members = True
 client = discord.Client(intents=intents)
 
-guild_id_num = XXXXXXXXXXXXXXXXXX
+guild_id_num = XXXXXXXXXXXXXXXXXX   #使用するサーバーのID
 startmsg = 'AmongUs用のBOT起動しました\n下のリアクションを用いて生存者・幽霊を自動で振り分けられます'
 textch_name = 'メイン部屋'
-textch_id_num = XXXXXXXXXXXXXXXXXX
+textch_id_num = XXXXXXXXXXXXXXXXXX  #テキストチャンネルのID
 
 survivor_name = '生存者'
 survivor_id_num = XXXXXXXXXXXXXXXXXX   #生存者の役職ID
@@ -27,11 +27,11 @@ ghost_id_num = XXXXXXXXXXXXXXXXXX   #幽霊の役職ID
 ghost_emoji_id_num = XXXXXXXXXXXXXXXXXX #幽霊の絵文字のID
 ghost_emoji_id = "<:amongus:XXXXXXXXXXXXXXXXXX>"    #幽霊の絵文字
 meetingch_name = 'ミーティング'
-meeting_id_num = XXXXXXXXXXXXXXXXXX #ミーティングID
+meeting_id_num = XXXXXXXXXXXXXXXXXX #ミーティング部屋のID
 alive_name = '生存部屋'
-alive_id_num = XXXXXXXXXXXXXXXXXX
+alive_id_num = XXXXXXXXXXXXXXXXXX   #探索者部屋のID
 haunted_name = '幽霊部屋'
-haunted_id_num = XXXXXXXXXXXXXXXXXX
+haunted_id_num = XXXXXXXXXXXXXXXXXX #幽霊部屋のID
 
 survival_emoji_id_num = XXXXXXXXXXXXXXXXXX ##探索の絵文字のID
 survival_emoji_id = "<:survival:XXXXXXXXXXXXXXXXXX>"    #探索の絵文字
@@ -208,15 +208,9 @@ async def on_message(message):
     if message.content.startswith('.end'):#!SHUTDOWN_BOTが入力されたら強制終了
         GAME_STATE = "game_end"
         await botend()
-    elif message.content.startswith('.e'):
-        GAME_STATE = "emergency"
-        await emergency()
     elif message.content.startswith('.start'):
         GAME_STATE = "game_setup"
         await game_setup()
-    elif message.content.startswith('.s'):
-        GAME_STATE = "survival"
-        await survival()
 
 
 #ユーザがリアクションをつけた時、対応する役職を付与（生存、幽霊）
