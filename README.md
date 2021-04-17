@@ -3,6 +3,8 @@
 
 
 
+#以下はHerokuでdiscord.pyを実行するための手順（サンプルのReadmeを引用）
+
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 - Herokuでdiscord.pyを始めるテンプレートです。
