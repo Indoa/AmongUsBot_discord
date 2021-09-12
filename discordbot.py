@@ -6,32 +6,34 @@ import asyncio
 import sys
 
 
-# 自分のBotのアクセストークンに置き換えてください
+
 TOKEN = os.environ['DISCORD_BOT_TOKEN']
+# ローカルで実行する際は、上のTOKEN宣言をコメントアウトして、以下の'xxxxxxx'に自分のBotのアクセストークンに置き換えてください
+# TOKEN = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
 intents = discord.Intents.default()
 intents.members = True
 client = discord.Client(intents=intents)
 
-guild_id_num = XXXXXXXXXXXXXXXXXX   #使用するサーバーのID
+guild_id_num = XXXXXXXXXXXXXXXXXX
 startmsg = 'AmongUs用のBOT起動しました\n下のリアクションを用いて生存者・幽霊を自動で振り分けられます'
 textch_name = 'メイン部屋'
-textch_id_num = XXXXXXXXXXXXXXXXXX  #テキストチャンネルのID
+textch_id_num = XXXXXXXXXXXXXXXXXX
 
-survivor_name = '生存者'
-survivor_id_num = XXXXXXXXXXXXXXXXXX   #生存者の役職ID
+survivor_name = 'survivor'  #ロールの名前と合わせる
+survivor_id_num = XXXXXXXXXXXXXXXXXX    #生存者の役職ID
 survivor_emoji_id_num = XXXXXXXXXXXXXXXXXX #生存者の絵文字のID
-survivor_emoji_id = "<:amongus:XXXXXXXXXXXXXXXXXX>" #生存者の絵文字
-ghost_name = '幽霊'
+survivor_emoji_id = "<:alive:XXXXXXXXXXXXXXXXXX>" #生存者の絵文字
+ghost_name = 'ghost'    #ロールの名前と合わせる
 ghost_id_num = XXXXXXXXXXXXXXXXXX   #幽霊の役職ID
 ghost_emoji_id_num = XXXXXXXXXXXXXXXXXX #幽霊の絵文字のID
-ghost_emoji_id = "<:amongus:XXXXXXXXXXXXXXXXXX>"    #幽霊の絵文字
+ghost_emoji_id = "<:Dead:XXXXXXXXXXXXXXXXXX>"    #幽霊の絵文字
 meetingch_name = 'ミーティング'
-meeting_id_num = XXXXXXXXXXXXXXXXXX #ミーティング部屋のID
+meeting_id_num = XXXXXXXXXXXXXXXXXX #ミーティングID
 alive_name = '生存部屋'
-alive_id_num = XXXXXXXXXXXXXXXXXX   #探索者部屋のID
+alive_id_num = XXXXXXXXXXXXXXXXXX
 haunted_name = '幽霊部屋'
-haunted_id_num = XXXXXXXXXXXXXXXXXX #幽霊部屋のID
+haunted_id_num = XXXXXXXXXXXXXXXXXX
 
 survival_emoji_id_num = XXXXXXXXXXXXXXXXXX ##探索の絵文字のID
 survival_emoji_id = "<:survival:XXXXXXXXXXXXXXXXXX>"    #探索の絵文字
@@ -115,6 +117,7 @@ async def game_ready(message):
     for voice_channel in guild.voice_channels:
         for member in voice_channel.members :
             print(member.roles)
+            await text_channel.send(member.roles)
             if (ghost_name  in str(member.roles) and survivor_name in str(member.roles)) \
                     or (not(ghost_name  in str(member.roles)) and not(survivor_name in str(member.roles))) :
                 no_reaction_member_list.append(member.name)
@@ -208,9 +211,12 @@ async def on_message(message):
     if message.content.startswith('.end'):#!SHUTDOWN_BOTが入力されたら強制終了
         GAME_STATE = "game_end"
         await botend()
+
     elif message.content.startswith('.start'):
         GAME_STATE = "game_setup"
         await game_setup()
+
+
 
 
 #ユーザがリアクションをつけた時、対応する役職を付与（生存、幽霊）
@@ -222,6 +228,12 @@ async def on_reaction_add(reaction, user):
     #botの正しいメッセージにリアクションをしたか＆ボットがしたリアクションではないか
     if reaction.message.content == startmsg and (not user.bot):
         checked_emoji = reaction.emoji.id   #つけたリアクションのチェック
+
+        #リアクションのIDをチェックする時、コメントアウトを外す
+        # Warning_message.append(await guild.get_channel(textch_id_num).send(checked_emoji))
+        # print(checked_emoji)  
+
+
         if checked_emoji == survivor_emoji_id_num or checked_emoji == ghost_emoji_id_num:
             if GAME_STATE == "survival" :
                 if (survivor_name in str(user.roles) and checked_emoji == ghost_emoji_id_num) \
@@ -245,11 +257,15 @@ async def on_reaction_add(reaction, user):
                 if GAME_STATE == "emergency":
                     await member.edit(mute=True)
                     await member.edit(deafen=False)
+        
+        # 探索クリック時
         elif checked_emoji == survival_emoji_id_num :
             await reaction.message.clear_reaction(survival_emoji_id)
             await reaction.message.add_reaction(emergency_emoji_id)
             GAME_STATE = "survival"
             await survival()
+
+        # エマージェンシークリック時
         elif checked_emoji == emergency_emoji_id_num :
             if len(Warning_message) == 0:
                 await reaction.message.clear_reaction(emergency_emoji_id)
@@ -258,6 +274,8 @@ async def on_reaction_add(reaction, user):
                 await emergency()
             else :
                 await reaction.message.remove_reaction(emergency_emoji_id_num, user)
+                
+        # スタートボタンをクリックしたとき
         elif checked_emoji == startbutton_emoji_id_num :
             await game_ready(reaction.message)
             await reaction.message.remove_reaction(startbutton_emoji_id, user)

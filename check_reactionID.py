@@ -8,6 +8,8 @@ import sys
 
 # 自分のBotのアクセストークンに置き換えてください
 TOKEN = os.environ['DISCORD_BOT_TOKEN']
+# ローカルで実行する際は、上のTOKEN宣言をコメントアウトして、以下の'xxxxxxx'に自分のBotのアクセストークンに置き換えてください
+# TOKEN = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
 intents = discord.Intents.default()
 intents.members = True
